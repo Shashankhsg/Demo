@@ -47,6 +47,17 @@ function App() {
     }
   };
 
+  const handleDelete = async (id) => {
+    if(!window.confirm("Are you sure you want to delete this event?")) return;
+    try {
+      await api.delete(`/events/${id}`);
+      fetchEvents(); // reload list
+    } catch (err) {
+      console.error("Error deleting event", err);
+      alert("Failed to delete event");
+    }
+  };
+
   return (
     <div style={{ maxWidth: "800px", margin: "0 auto", padding: "1rem" }}>
       <h1>Event Manager (MERN)</h1>
@@ -102,17 +113,23 @@ function App() {
       {events.length === 0 && <p>No events yet. Add one above!</p>}
 
       <ul>
-        {events.map((event) => (
-          <li key={event._id} style={{ marginBottom: "1rem" }}>
-            <strong>{event.title}</strong> <br />
-            {event.description && <span>{event.description} <br /></span>}
-            <small>
-              Date: {new Date(event.date).toLocaleDateString()} | Venue:{" "}
-              {event.venue || "N/A"}
-            </small>
-          </li>
-        ))}
-      </ul>
+  {events.map((event) => (
+    <li key={event._id} style={{ marginBottom: "1rem" }}>
+      <strong>{event.title}</strong> <br />
+      {event.description && <span>{event.description} <br /></span>}
+      <small>
+        Date: {new Date(event.date).toLocaleDateString()} | Venue:{" "}
+        {event.venue || "N/A"}
+      </small>
+      <br />
+      <button onClick={() => handleDelete(event._id)}>
+        Delete
+      </button>
+    </li>
+  ))}
+</ul>
+
+      
     </div>
   );
 }

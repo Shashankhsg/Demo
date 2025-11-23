@@ -49,4 +49,18 @@ router.post("/", async (req, res) => {
   }
 });
 
+router.delete("/:id", async (req, res) => {
+  try {
+    const{id}=req.params;
+    const deleted=await Event.findByIdAndDelete(id);
+    if(!deleted){
+      return res.status(404).json({message:"Event not found"});
+    }
+    res.json({message:"Event deleted successfully"});
+  } catch (err) {
+    console.error("Error deleting event:", err.message);
+    res.status(500).json({ message: "Error deleting event" });
+  }
+});
+
 export default router;
